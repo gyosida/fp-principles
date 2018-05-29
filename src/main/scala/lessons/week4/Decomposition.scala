@@ -5,16 +5,32 @@ package lessons.week4
 //to deal with all classes of the hierarchy
 
 // Create a set of expressions
-trait Expr {
+trait OOExpr {
   val eval: Int
 }
 
-class Number(val n: Int) extends Expr {
+class OONumber(val n: Int) extends OOExpr {
   override val eval: Int = n
 }
 
-class Sum(val e1: Expr, e2: Expr) extends Expr {
+class OOSum(val e1: OOExpr, e2: OOExpr) extends OOExpr {
   override val eval: Int = e1.eval + e2.eval
 }
 
 // Improve solution: Pattern Matching
+// extensible for new methods
+trait Expr {
+  def eval(): Int = this match {
+    case Number(n) => n
+    case Sum(x, y) => x.eval + y.eval
+  }
+}
+case class Number(n: Int) extends Expr
+case class Sum(x: Expr, y: Expr) extends Expr
+
+object Expr {
+  def show(expr: Expr): String = expr match {
+    case Number(n) => n.toString
+    case Sum(x, y) => show(x) + " + " + show(y)
+  }
+}
